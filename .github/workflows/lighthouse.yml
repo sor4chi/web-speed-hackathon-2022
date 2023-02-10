@@ -30,18 +30,31 @@ jobs:
         run: yarn build
 
       - name: Run Server
-        run: npx concurrently -k -s first -n "SERVER,LIGHTHOUSE" -c "magenta,blue" "yarn serve:test --silent" "wait-on tcp:3000 && lighthouse --chrome-flags='--headless' --output html --output-path ./dist/report${{ github.sha }}.html http://localhost:3000"
+        run: >
+        npx concurrently -k -s first -n "SERVER,LIGHTHOUSE" -c "magenta,blue" \
+        "yarn serve:test --silent" \
+        "wait-on tcp:3000 && lighthouse --chrome-flags='--headless' --output json --output-path ./report/top.json http://localhost:3000" \
+        "wait-on tcp:3000 && lighthouse --chrome-flags='--headless' --output json --output-path ./report/race-card.json http://localhost:3000/races/e42f0190-2d4c-4a9e-a1a0-5d025979ab95/race-card" \
+        "wait-on tcp:3000 && lighthouse --chrome-flags='--headless' --output json --output-path ./report/odds1.json http://localhost:3000/races/e42f0190-2d4c-4a9e-a1a0-5d025979ab95/odds" \
+        "wait-on tcp:3000 && lighthouse --chrome-flags='--headless' --output json --output-path ./report/odds2.json http://localhost:3000/races/ba77cb90-d030-43a8-9fec-1690a93f2be1/odds" \
+        "wait-on tcp:3000 && lighthouse --chrome-flags='--headless' --output json --output-path ./report/result.json http://localhost:3000/races/e42f0190-2d4c-4a9e-a1a0-5d025979ab95/result"
 
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@releases/v3
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: dist
+      - name: Calc Total Score
+        run: |
+          node ./report/score.js > ./report/score.txt
 
       - name: Comment on PR
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            Lighthouse report for this PR is available [here](${{ github.event.repository.html_url }}/blob/gh-pages/report${{ github.sha }}.html)
+            <details>
+            <summary>Report</summary>
+            Score:
+            <pre>
+            $(cat ./report/score.txt)
+            </pre>
+            </details>
+
+
+
