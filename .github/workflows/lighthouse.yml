@@ -24,14 +24,14 @@ jobs:
       - name: Install Dependencies
         run: yarn install
 
-      - name: Seed Test Data
-        run: yarn init:seeds 2023-01-25 2023-02-27
+      # - name: Seed Test Data
+      #   run: yarn init:seeds 2023-01-25 2023-02-27
 
       - name: Build
         run: yarn build
 
       - name: Run Server
-        run: concurrently -k -s first -n \"SERVER,LIGHTHOUSE\" -c \"magenta,blue\" \"yarn serve --silent\" \"wait-on tcp:3000 &&   lighthouse --chrome-flags="--headless" --output html --output-path ./report.html 'http://localhost:3000' \""
+        run: concurrently -k -s first -n "SERVER,LIGHTHOUSE" -c "magenta,blue" "yarn serve:test --silent" "wait-on tcp:3000 && lighthouse --chrome-flags='--headless' --output html --output-path ./report.html 'http://localhost:3000'"
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@releases/v3
