@@ -1,0 +1,43 @@
+name: lighthouse
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install lighthouse
+        run: sudo npm i -g lighthouse
+
+      - name: Seed Test Data
+        run: yarn init:seeds
+
+      - name: Build
+        run: yarn build
+
+      - name: Run Server
+        run: yarn serve
+
+      - name: Run lighthouse
+        run: |
+          lighthouse \
+            --chrome-flags="--headless" \
+            --output html --output-path ./report.html \
+            'http://localhost'
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: report${{ github.sha }}.html
+
+      - name: Comment on PR
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            Lighthouse report for this PR is available [here](${{ github.event.repository.html_url }}/blob/gh-pages/report${{ github.sha }}.html)
