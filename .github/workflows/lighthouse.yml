@@ -25,7 +25,7 @@ jobs:
         run: yarn install
 
       - name: Seed Test Data
-        run: yarn init:seeds
+        run: yarn init:seeds 2023-01-25 2023-02-27
 
       - name: Build
         run: yarn build
