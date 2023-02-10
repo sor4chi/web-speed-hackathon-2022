@@ -34,13 +34,7 @@ jobs:
 
       - name: Run Server
         run: >
-          npx concurrently -k -s first -n "SERVER,LIGHTHOUSE_TOP,LIGHTHOUSE_RACE_CARD,LIGHTHOUSE_ODDS1,LIGHTHOUSE_ODDS2,LIGHTHOUSE_RESULT" -c "blue,green,magenta,cyan,yellow,red"
-          "yarn serve:test --silent" \
-          "wait-on tcp:3000 && lighthouse --chrome-flags='--headless' --output json --output-path ./report/top.json http://localhost:3000" \
-          "wait-on tcp:3000 && lighthouse --chrome-flags='--headless' --output json --output-path ./report/race-card.json http://localhost:3000/races/e42f0190-2d4c-4a9e-a1a0-5d025979ab95/race-card" \
-          "wait-on tcp:3000 && lighthouse --chrome-flags='--headless' --output json --output-path ./report/odds1.json http://localhost:3000/races/e42f0190-2d4c-4a9e-a1a0-5d025979ab95/odds" \
-          "wait-on tcp:3000 && lighthouse --chrome-flags='--headless' --output json --output-path ./report/odds2.json http://localhost:3000/races/ba77cb90-d030-43a8-9fec-1690a93f2be1/odds" \
-          "wait-on tcp:3000 && lighthouse --chrome-flags='--headless' --output json --output-path ./report/result.json http://localhost:3000/races/e42f0190-2d4c-4a9e-a1a0-5d025979ab95/result"
+          npx concurrently -k -s first -n "SERVER,LIGHTHOUSE_TOP,LIGHTHOUSE_RACE_CARD,LIGHTHOUSE_ODDS1,LIGHTHOUSE_ODDS2,LIGHTHOUSE_RESULT" -c "blue,green,magenta,cyan,yellow,red" "yarn serve:test --silent" "wait-on tcp:3000 && lighthouse --chrome-flags='--headless' --output json --output-path ./report/top.json http://localhost:3000" "wait-on tcp:3000 && lighthouse --chrome-flags='--headless' --output json --output-path ./report/race-card.json http://localhost:3000/races/e42f0190-2d4c-4a9e-a1a0-5d025979ab95/race-card" "wait-on tcp:3000 && lighthouse --chrome-flags='--headless' --output json --output-path ./report/odds1.json http://localhost:3000/races/e42f0190-2d4c-4a9e-a1a0-5d025979ab95/odds" "wait-on tcp:3000 && lighthouse --chrome-flags='--headless' --output json --output-path ./report/odds2.json http://localhost:3000/races/ba77cb90-d030-43a8-9fec-1690a93f2be1/odds" "wait-on tcp:3000 && lighthouse --chrome-flags='--headless' --output json --output-path ./report/result.json http://localhost:3000/races/e42f0190-2d4c-4a9e-a1a0-5d025979ab95/result"
 
       - name: ls report
         run: ls -la ./report
