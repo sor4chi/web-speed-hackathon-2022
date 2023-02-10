@@ -28,7 +28,7 @@ jobs:
         run: yarn build
 
       - name: Run Server
-        run: npx concurrently -k -s first -n "SERVER,LIGHTHOUSE" -c "magenta,blue" "yarn serve:test --silent" "wait-on tcp:3000 && lighthouse --chrome-flags='--headless' --output html --output-path ./report.html 'http://localhost:3000'"
+        run: npx concurrently -k -s first -n "SERVER,LIGHTHOUSE" -c "magenta,blue" "yarn serve:test --silent" "wait-on tcp:3000 && lighthouse --chrome-flags='--headless' --output html --output-path ./report${{ github.sha }}.html http://localhost:3000"
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@releases/v3
