@@ -43,10 +43,5 @@ jobs:
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            <details>
-            <summary>Report</summary>
-            Score:
-            <pre>
-            ${{ env.total_score }}
-            </pre>
-            </details>
+            <h2>Total Lighthouse Bench Score</h2>
+            <pre>${{ env.total_score }}</pre>
