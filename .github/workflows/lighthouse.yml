@@ -36,7 +36,7 @@ jobs:
 
       - name: Calc Total Score
         run: |
-          node ./report/score.js > ./report/score.txt
+          echo "total_score=$(node ./report/score.js)" >> $GITHUB_ENV
 
       - name: Comment on PR
         uses: peter-evans/create-or-update-comment@v1
@@ -47,6 +47,6 @@ jobs:
             <summary>Report</summary>
             Score:
             <pre>
-            $(cat ./report/score.txt)
+            ${{ env.total_score }}
             </pre>
             </details>
