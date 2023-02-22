@@ -8,20 +8,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          cache: 'yarn'
+
       - name: Install lighthouse
         run: sudo npm i -g lighthouse
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-
-      - uses: actions/cache@v3
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
 
       - name: Install Dependencies
         run: yarn install
@@ -32,7 +25,7 @@ jobs:
       - name: Run Server
         run: >
           npx concurrently -k -s first -n "SERVER,LIGHTHOUSE" -c "blue,red" "yarn serve:test" \
-          "wait-on tcp:3000 && lighthouse --chrome-flags='--headless' --output json --output-path ./report/top.json http://localhost:3000 && lighthouse --chrome-flags='--headless' --output json --output-path ./report/race-card.json http://localhost:3000/races/e42f0190-2d4c-4a9e-a1a0-5d025979ab95/race-card && lighthouse --chrome-flags='--headless' --output json --output-path ./report/odds1.json http://localhost:3000/races/e42f0190-2d4c-4a9e-a1a0-5d025979ab95/odds && lighthouse --chrome-flags='--headless' --output json --output-path ./report/odds2.json http://localhost:3000/races/ba77cb90-d030-43a8-9fec-1690a93f2be1/odds && lighthouse --chrome-flags='--headless' --output json --output-path ./report/result.json http://localhost:3000/races/e42f0190-2d4c-4a9e-a1a0-5d025979ab95/result"
+          "wait-on tcp:3000 && lighthouse --chrome-flags='--headless' --output json --output-path ./report/top.json http://localhost:3000 && lighthouse --chrome-flags='--headless' --output json --output-path ./report/race-card.json http://localhost:3000/races/fb447f83-0186-447c-8c8a-2e68f74c44e7/race-card && lighthouse --chrome-flags='--headless' --output json --output-path ./report/odds1.json http://localhost:3000/races/fb447f83-0186-447c-8c8a-2e68f74c44e7/odds && lighthouse --chrome-flags='--headless' --output json --output-path ./report/odds2.json http://localhost:3000/races/f6bd4951-4765-410e-8543-0f61775f828c/odds && lighthouse --chrome-flags='--headless' --output json --output-path ./report/result.json http://localhost:3000/races/fb447f83-0186-447c-8c8a-2e68f74c44e7/result"
 
       - name: Calc Total Score
         run: |
