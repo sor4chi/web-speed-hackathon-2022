@@ -1,0 +1,40 @@
+name: lighthouse
+
+on: [pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          cache: 'yarn'
+
+      - name: Install lighthouse
+        run: sudo npm i -g lighthouse
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Build
+        run: yarn build
+
+      - name: Run Server
+        run: >
+          npx concurrently -k -s first -n "SERVER,LIGHTHOUSE" -c "blue,red" "yarn serve:test" \
+          "wait-on tcp:3000 && lighthouse --chrome-flags='--headless' --output json --output-path ./report/top.json http://localhost:3000 && lighthouse --chrome-flags='--headless' --output json --output-path ./report/race-card.json http://localhost:3000/races/fb447f83-0186-447c-8c8a-2e68f74c44e7/race-card && lighthouse --chrome-flags='--headless' --output json --output-path ./report/odds1.json http://localhost:3000/races/fb447f83-0186-447c-8c8a-2e68f74c44e7/odds && lighthouse --chrome-flags='--headless' --output json --output-path ./report/odds2.json http://localhost:3000/races/f6bd4951-4765-410e-8543-0f61775f828c/odds && lighthouse --chrome-flags='--headless' --output json --output-path ./report/result.json http://localhost:3000/races/fb447f83-0186-447c-8c8a-2e68f74c44e7/result"
+
+      - name: Calc Total Score
+        run: |
+          echo "total_score=$(node ./report/score.js)" >> $GITHUB_ENV
+
+      - name: Comment on PR
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            <h2>Total Lighthouse Bench Score</h2>
+            <pre>${{ env.total_score }}</pre>
