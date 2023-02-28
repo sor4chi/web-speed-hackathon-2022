@@ -53,7 +53,7 @@ export const RaceResult = () => {
         <Spacer mt={Space * 2} />
         <img
           height={225}
-          src={data.image}
+          src={data.image.replace(/(.+)\.jpg/, "$1.webp")}
           style={{ objectFit: "cover" }}
           width={400}
         />

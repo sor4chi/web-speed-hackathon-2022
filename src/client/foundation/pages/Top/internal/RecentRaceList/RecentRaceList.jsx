@@ -94,7 +94,7 @@ const Item = ({ race }) => {
           <Stack horizontal alignItems="center" gap={Space * 2}>
             <img
               height={100}
-              src={race.image}
+              src={race.image.replace(/(.+)\.jpg/, "$1.webp")}
               style={{ objectFit: "cover" }}
               width={100}
             />
