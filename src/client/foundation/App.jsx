@@ -4,15 +4,14 @@ import { StyleSheetManager } from "styled-components";
 
 import { AuthContextProvider } from "./contexts/AuthContext";
 import { Routes } from "./routes";
-// import { GlobalStyle } from "./styles/GlobalStyle";
-import "./styles/global.css"
-import "modern-css-reset/dist/reset.min.css"
+import { GlobalStyle } from "./styles/GlobalStyle";
 
 /** @type {React.VFC} */
 export const App = () => {
   return (
     <StyleSheetManager disableCSSOMInjection>
       <AuthContextProvider>
+        <GlobalStyle />
         <BrowserRouter>
           <Routes />
         </BrowserRouter>
