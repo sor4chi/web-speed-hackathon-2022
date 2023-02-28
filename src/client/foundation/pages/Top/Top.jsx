@@ -1,6 +1,12 @@
 import _ from "lodash";
 import moment from "moment-timezone";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
@@ -14,7 +20,8 @@ import { Color, Radius, Space } from "../../styles/variables";
 import { isSameDay } from "../../utils/DateUtils";
 import { authorizedJsonFetcher, jsonFetcher } from "../../utils/HttpUtils";
 
-import { ChargeDialog } from "./internal/ChargeDialog";
+// import { ChargeDialog } from "./internal/ChargeDialog";
+const ChargeDialog = React.lazy(() => import("./internal/ChargeDialog"));
 import { HeroImage } from "./internal/HeroImage";
 import { RecentRaceList } from "./internal/RecentRaceList";
 
@@ -153,16 +160,25 @@ export const Top = () => {
 
       <Spacer mt={Space * 2} />
       {userData && (
-        <Stack horizontal alignItems="center" justifyContent="space-between">
-          <div>
-            <p>ポイント残高: {userData.balance}pt</p>
-            <p>払戻金: {userData.payoff}Yeen</p>
-          </div>
+        <>
+          <Stack horizontal alignItems="center" justifyContent="space-between">
+            <div>
+              <p>ポイント残高: {userData.balance}pt</p>
+              <p>払戻金: {userData.payoff}Yeen</p>
+            </div>
 
-          <ChargeButton onClick={handleClickChargeButton}>
-            チャージ
-          </ChargeButton>
-        </Stack>
+            <ChargeButton onClick={handleClickChargeButton}>
+              チャージ
+            </ChargeButton>
+          </Stack>
+
+          <Suspense fallback={null}>
+            <ChargeDialog
+              ref={chargeDialogRef}
+              onComplete={handleCompleteCharge}
+            />
+          </Suspense>
+        </>
       )}
 
       <Spacer mt={Space * 2} />
@@ -176,8 +192,6 @@ export const Top = () => {
           </RecentRaceList>
         )}
       </section>
-
-      <ChargeDialog ref={chargeDialogRef} onComplete={handleCompleteCharge} />
     </Container>
   );
 };

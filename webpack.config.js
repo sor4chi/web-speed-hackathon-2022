@@ -13,6 +13,7 @@ const SRC_ROOT = abs("./src");
 const PUBLIC_ROOT = abs("./public");
 const DIST_ROOT = abs("./dist");
 const DIST_PUBLIC = abs("./dist/public");
+const DIST_JS = abs("./dist/public/assets/js");
 const ANALYZE = process.env.ANALYZE === "enable";
 const IS_PROD = process.env.NODE_ENV === "production";
 
@@ -40,8 +41,11 @@ module.exports = [
                 [
                   "@babel/preset-env",
                   {
-                    modules: "cjs",
                     spec: true,
+                    targets: {
+                      chrome: "106",
+                      safari: "16.0",
+                    },
                   },
                 ],
                 "@babel/preset-react",
@@ -54,7 +58,7 @@ module.exports = [
     name: "client",
     output: {
       filename: "[name].bundle.js",
-      path: DIST_PUBLIC,
+      path: DIST_JS,
     },
     plugins: [
       new CopyPlugin({
@@ -63,7 +67,7 @@ module.exports = [
       ANALYZE &&
         new BundleAnalyzerPlugin({
           analyzerMode: "static",
-          openAnalyzer: false,
+          openAnalyzer: true,
           reportFilename: abs("./dist/report.html"),
         }),
     ].filter(Boolean),
