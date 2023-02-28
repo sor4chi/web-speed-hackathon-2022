@@ -30,7 +30,11 @@ export const RaceResultSection = () => {
         data-prefix="far"
         focusable="false"
         role="img"
-        style="width: 1em; height: 1em; vertical-align: -0.125em;"
+        style={{
+          height: "1em",
+          verticalAlign: "-0.125em",
+          width: "1em",
+        }}
         viewBox="0 0 448 512"
         xmlns="http://www.w3.org/2000/svg"
       >
