@@ -11,7 +11,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          cache: 'yarn'
+          cache: "yarn"
 
       - name: Install lighthouse
         run: sudo npm i -g lighthouse
@@ -29,12 +29,12 @@ jobs:
 
       - name: Calc Total Score
         run: |
-          echo "total_score=$(node ./report/score.js)" >> $GITHUB_ENV
+          echo "total_report=$(node ./report/score.js)" >> $GITHUB_ENV
 
       - name: Comment on PR
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            <h2>Total Lighthouse Bench Score</h2>
-            <pre>${{ env.total_score }}</pre>
+            <h2>Lighthouse Bench</h2>
+            ${{ env.total_report }}
