@@ -4,6 +4,7 @@ import styled from "styled-components";
 const Image = styled.img`
   display: block;
   margin: 0 auto;
+  height: auto;
 `;
 
 /**
@@ -14,5 +15,12 @@ const Image = styled.img`
 
 /** @type {React.VFC<Props>} */
 export const HeroImage = ({ url }) => {
-  return <Image alt="" src={url.replace(/(.+)\.jpg/, "$1.webp")} />;
+  return (
+    <Image
+      alt=""
+      height={734}
+      src={url.replace(/(.+)\.jpg/, "$1.webp")}
+      width={1024}
+    />
+  );
 };
