@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useCallback, useState } from "react";
 
 import { useAuth } from "../contexts/AuthContext";
@@ -44,7 +43,7 @@ export function useMutation(apiPath, { auth, method }) {
       }));
 
       try {
-        const res = await axios.request({
+        const res = await fetch(apiPath, {
           data,
           headers: auth
             ? {
@@ -52,12 +51,13 @@ export function useMutation(apiPath, { auth, method }) {
               }
             : {},
           method,
-          url: apiPath,
         });
+        if (res.status !== 200) throw new Error("Failed to fetch");
+        const body = await res.json();
 
         setResult((cur) => ({
           ...cur,
-          data: res.data,
+          data: body,
           loading: false,
         }));
       } catch (error) {
